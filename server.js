@@ -22,7 +22,7 @@ libSetupServer(
 	{
 		ContentPath: libPath.join(__dirname, 'content'),
 		UploadPath: libPath.join(__dirname, 'uploads'),
-		DistPath: libPath.join(__dirname, 'dist'),
+		DistPath: libPath.join(__dirname, 'web-application'),
 		Port: tmpPort
 	},
 	function (pError, pServerInfo)

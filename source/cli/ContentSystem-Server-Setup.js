@@ -7,7 +7,7 @@
  * @param {object} pOptions
  * @param {string} pOptions.ContentPath  - Absolute path to the markdown content folder
  * @param {string} pOptions.UploadPath   - Absolute path to the uploads folder
- * @param {string} pOptions.DistPath     - Absolute path to the built dist folder
+ * @param {string} pOptions.DistPath     - Absolute path to the built web-application folder
  * @param {number} pOptions.Port         - HTTP port to listen on
  * @param {Function} fCallback           - Callback(pError, { Fable, Orator, Port })
  */

@@ -53,7 +53,7 @@ On startup the server prints a banner with all relevant paths and URLs:
   Retold Content System running on http://localhost:7042
   Content: /Users/you/my-docs
   Uploads: /Users/you/my-docs/uploads
-  Assets:  /path/to/retold-content-system/dist
+  Assets:  /path/to/retold-content-system/web-application
   Reader:  http://localhost:7042/
   Editor:  http://localhost:7042/edit.html
 ```
@@ -102,7 +102,7 @@ setupServer(
     {
         ContentPath: '/path/to/content',
         UploadPath: '/path/to/content/uploads',
-        DistPath: '/path/to/retold-content-system/dist',
+        DistPath: '/path/to/retold-content-system/web-application',
         Port: 8080
     },
     function (pError, pServerInfo)

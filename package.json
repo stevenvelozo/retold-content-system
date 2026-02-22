@@ -7,18 +7,33 @@
 		"retold-content-system": "source/cli/ContentSystem-CLI-Run.js",
 		"rcs": "source/cli/ContentSystem-CLI-Run.js"
 	},
+	"files": [
+		"source/",
+		"web-application/",
+		"html/",
+		"css/",
+		"docs/",
+		"server.js",
+		"build-codemirror-bundle.js",
+		"build-codejar-bundle.js",
+		"codemirror-entry.js",
+		"codejar-entry.js",
+		"README.md",
+		"LICENSE"
+	],
 	"scripts": {
 		"start": "node server.js",
 		"build": "npx quack build && npx quack copy",
 		"build-codemirror": "node build-codemirror-bundle.js",
 		"build-codejar": "node build-codejar-bundle.js",
 		"build-all": "npm run build-codemirror && npm run build-codejar && npm run build",
+		"prepack": "npm run build-all",
 		"test": "echo \"Error: no test specified\" && exit 0"
 	},
 	"author": "steven velozo <steven@velozo.com>",
 	"license": "MIT",
 	"dependencies": {
-		"fable": "^3.0.170",
+		"fable": "^3.1.58",
 		"orator": "^6.0.2",
 		"orator-serviceserver-restify": "^2.0.7",
 		"pict": "^1.0.350",
@@ -35,7 +50,7 @@
 	"devDependencies": {
 		"@codemirror/lang-markdown": "^6.5.0",
 		"@codemirror/state": "^6.5.4",
-		"@codemirror/view": "^6.36.0",
+		"@codemirror/view": "^6.39.15",
 		"codejar": "^4.3.0",
 		"codemirror": "^6.0.2",
 		"esbuild": "^0.27.3",
@@ -48,23 +63,23 @@
 	"copyFiles": [
 		{
 			"from": "./html/*",
-			"to": "./dist/"
+			"to": "./web-application/"
 		},
 		{
 			"from": "./css/**",
-			"to": "./dist/css/"
+			"to": "./web-application/css/"
 		},
 		{
 			"from": "./node_modules/pict/dist/pict.min.js",
-			"to": "./dist/js/"
+			"to": "./web-application/js/"
 		},
 		{
 			"from": "./node_modules/pict/dist/pict.min.js.map",
-			"to": "./dist/js/"
+			"to": "./web-application/js/"
 		},
 		{
 			"from": "./node_modules/highlight.js/styles/github.css",
-			"to": "./dist/css/"
+			"to": "./web-application/css/"
 		}
 	]
 }

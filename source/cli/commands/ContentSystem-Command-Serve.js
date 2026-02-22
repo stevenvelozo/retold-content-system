@@ -37,16 +37,16 @@ class ContentSystemCommandServe extends libCommandLineCommand
 			}
 		}
 
-		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'dist');
+		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'web-application');
 		let tmpUploadPath = libPath.join(tmpContentPath, 'uploads');
 		let tmpPortOption = parseInt(this.CommandOptions.port, 10);
 		let tmpPort = (tmpPortOption > 0) ? tmpPortOption : (7000 + Math.floor(Math.random() * 1000));
 
-		// Validate dist path (packaged with the module)
+		// Validate web-application path (packaged with the module)
 		if (!libFs.existsSync(tmpDistPath))
 		{
 			this.log.error(`Built assets not found at ${tmpDistPath}. Run 'npm run build-all' in the retold-content-system package first.`);
-			return fCallback(new Error('dist folder not found'));
+			return fCallback(new Error('web-application folder not found'));
 		}
 
 		// Ensure content directory exists
