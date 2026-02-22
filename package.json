@@ -1,0 +1,70 @@
+{
+	"name": "retold-content-system",
+	"version": "0.0.1",
+	"description": "Retold Content System - Markdown content viewer and editor",
+	"main": "source/Pict-ContentSystem-Bundle.js",
+	"bin": {
+		"retold-content-system": "source/cli/ContentSystem-CLI-Run.js",
+		"rcs": "source/cli/ContentSystem-CLI-Run.js"
+	},
+	"scripts": {
+		"start": "node server.js",
+		"build": "npx quack build && npx quack copy",
+		"build-codemirror": "node build-codemirror-bundle.js",
+		"build-codejar": "node build-codejar-bundle.js",
+		"build-all": "npm run build-codemirror && npm run build-codejar && npm run build",
+		"test": "echo \"Error: no test specified\" && exit 0"
+	},
+	"author": "steven velozo <steven@velozo.com>",
+	"license": "MIT",
+	"dependencies": {
+		"fable": "^3.0.170",
+		"orator": "^6.0.2",
+		"orator-serviceserver-restify": "^2.0.7",
+		"pict": "^1.0.350",
+		"pict-application": "^1.0.32",
+		"pict-docuserve": "^0.0.27",
+		"pict-provider": "^1.0.10",
+		"pict-section-code": "^1.0.0",
+		"pict-section-content": "^0.0.6",
+		"pict-section-filebrowser": "^0.0.1",
+		"pict-section-markdowneditor": "^1.0.0",
+		"pict-service-commandlineutility": "^1.0.18",
+		"pict-view": "^1.0.66"
+	},
+	"devDependencies": {
+		"@codemirror/lang-markdown": "^6.5.0",
+		"@codemirror/state": "^6.5.4",
+		"@codemirror/view": "^6.36.0",
+		"codejar": "^4.3.0",
+		"codemirror": "^6.0.2",
+		"esbuild": "^0.27.3",
+		"highlight.js": "^11.11.1",
+		"quackage": "^1.0.56"
+	},
+	"copyFilesSettings": {
+		"whenFileExists": "overwrite"
+	},
+	"copyFiles": [
+		{
+			"from": "./html/*",
+			"to": "./dist/"
+		},
+		{
+			"from": "./css/**",
+			"to": "./dist/css/"
+		},
+		{
+			"from": "./node_modules/pict/dist/pict.min.js",
+			"to": "./dist/js/"
+		},
+		{
+			"from": "./node_modules/pict/dist/pict.min.js.map",
+			"to": "./dist/js/"
+		},
+		{
+			"from": "./node_modules/highlight.js/styles/github.css",
+			"to": "./dist/css/"
+		}
+	]
+}

@@ -1,0 +1,15 @@
+{
+	"Name": "Retold Content Reader",
+	"Hash": "ContentReader",
+
+	"MainViewportViewIdentifier": "Docuserve-Layout",
+
+	"AutoSolveAfterInitialize": true,
+	"AutoRenderMainViewportViewAfterInitialize": false,
+	"AutoRenderViewsAfterInitialize": false,
+
+	"pict_configuration":
+		{
+			"Product": "ContentReader-Pict-Application"
+		}
+}
