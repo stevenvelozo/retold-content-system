@@ -238,6 +238,99 @@ const _ViewConfiguration =
 			border-radius: 3px;
 			color: #5E5549;
 		}
+
+		/* ============================================
+		   RESPONSIVE: Tablet / Phone (max-width: 768px)
+		   ============================================ */
+		@media (max-width: 768px)
+		{
+			.content-editor-topbar
+			{
+				height: auto;
+				min-height: 44px;
+				flex-wrap: wrap;
+				padding: 4px 0;
+			}
+
+			/* Brand text: shrink */
+			.content-editor-topbar-brand
+			{
+				padding: 0 8px;
+				font-size: 0.85rem;
+			}
+
+			/* File name: switch from absolute centering to flow layout */
+			.content-editor-topbar-file
+			{
+				position: static;
+				transform: none;
+				max-width: none;
+				flex: 1;
+				min-width: 0;
+				padding: 0 4px;
+			}
+
+			/* Hide the spacer (not needed when file is in-flow) */
+			.content-editor-topbar-spacer
+			{
+				display: none;
+			}
+
+			/* Hide word/line count stats on mobile to save space */
+			.content-editor-topbar-stats
+			{
+				display: none;
+			}
+
+			/* Compact action buttons */
+			.content-editor-topbar-actions
+			{
+				gap: 4px;
+				padding: 0 6px;
+			}
+
+			.content-editor-topbar-btn
+			{
+				padding: 5px 10px;
+				font-size: 0.75rem;
+			}
+
+			/* Status text */
+			.content-editor-topbar-status
+			{
+				padding: 0 6px;
+				font-size: 0.72rem;
+			}
+
+			/* Confirm dialog: tighter for mobile */
+			.content-editor-confirm-panel
+			{
+				width: 95vw;
+				max-width: 95vw;
+			}
+		}
+
+		/* ============================================
+		   RESPONSIVE: Small phone (max-width: 480px)
+		   ============================================ */
+		@media (max-width: 480px)
+		{
+			/* Hide brand text entirely on very small screens */
+			.content-editor-topbar-brand
+			{
+				display: none;
+			}
+
+			.content-editor-topbar-filename
+			{
+				font-size: 0.8rem;
+			}
+
+			.content-editor-topbar-actions
+			{
+				padding: 0 4px;
+			}
+		}
 	`,
 
 	Templates:

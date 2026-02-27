@@ -533,6 +533,122 @@ const _ViewConfiguration =
 			color: #8A7F72;
 			text-align: center;
 		}
+
+		/* ============================================
+		   RESPONSIVE: Tablet / Phone (max-width: 768px)
+		   ============================================ */
+		@media (max-width: 768px)
+		{
+			/* Prevent horizontal scroll on the whole app */
+			#ContentEditor-Application-Container
+			{
+				overflow-x: hidden;
+				width: 100%;
+				max-width: 100vw;
+			}
+
+			/* Stack sidebar ABOVE editor instead of side-by-side */
+			.content-editor-body
+			{
+				flex-direction: column;
+			}
+
+			/* Sidebar becomes a horizontal strip at the top */
+			.content-editor-sidebar-wrap
+			{
+				width: 100% !important;
+				max-height: 40vh;
+				flex-shrink: 0;
+				border-bottom: 1px solid #DDD6CA;
+				border-right: none;
+			}
+
+			/* When collapsed on mobile, hide the inner content but keep the
+			   toggle button visible (it's positioned below the sidebar strip) */
+			.content-editor-sidebar-wrap.collapsed
+			{
+				width: 100% !important;
+				max-height: 0;
+				overflow: visible;
+			}
+			.content-editor-sidebar-wrap.collapsed .content-editor-sidebar-inner
+			{
+				display: none;
+			}
+
+			/* Hide the resize handle (desktop-only interaction) */
+			.content-editor-resize-handle
+			{
+				display: none;
+			}
+
+			/* Reposition the sidebar toggle for horizontal layout —
+			   place it at the bottom-center of the sidebar strip */
+			.content-editor-sidebar-toggle
+			{
+				position: absolute;
+				top: auto;
+				bottom: -20px;
+				right: auto;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 28px;
+				height: 20px;
+				border-radius: 0 0 4px 4px;
+				border: 1px solid #DDD6CA;
+				border-top: none;
+				z-index: 10;
+			}
+			.content-editor-sidebar-wrap.collapsed .content-editor-sidebar-toggle
+			{
+				bottom: -20px;
+				right: auto;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			/* Reduce editor container padding (less gutters) */
+			#ContentEditor-Editor-Container
+			{
+				padding: 24px 8px 8px 8px;
+			}
+
+			/* Reduce binary preview padding */
+			.binary-preview-image
+			{
+				padding: 12px;
+			}
+			.binary-preview-card
+			{
+				padding: 12px;
+				gap: 12px;
+			}
+
+			/* Upload panel: fill more of the screen */
+			.content-editor-upload-panel
+			{
+				width: 95vw;
+				max-width: 95vw;
+			}
+		}
+
+		/* ============================================
+		   RESPONSIVE: Small phone (max-width: 480px)
+		   ============================================ */
+		@media (max-width: 480px)
+		{
+			/* Even tighter editor padding */
+			#ContentEditor-Editor-Container
+			{
+				padding: 20px 4px 4px 4px;
+			}
+
+			/* Sidebar gets a smaller max height */
+			.content-editor-sidebar-wrap
+			{
+				max-height: 35vh;
+			}
+		}
 	`,
 
 	Templates:
@@ -636,11 +752,22 @@ class ContentEditorLayoutView extends libPictView
 		let tmpToggle = document.getElementById('ContentEditor-SidebarToggle');
 		if (tmpWrap)
 		{
-			tmpWrap.style.width = tmpSettings.SidebarWidth + 'px';
+			let tmpIsMobile = (window.innerWidth <= 768);
+
+			tmpWrap.style.width = tmpIsMobile ? '100%' : (tmpSettings.SidebarWidth + 'px');
 			if (tmpSettings.SidebarCollapsed)
 			{
 				tmpWrap.classList.add('collapsed');
-				if (tmpToggle) tmpToggle.innerHTML = '&#x25B6;';
+				if (tmpToggle) tmpToggle.innerHTML = tmpIsMobile ? '&#x25BC;' : '&#x25B6;';
+			}
+			else if (tmpIsMobile)
+			{
+				// Auto-collapse sidebar on narrow viewports.
+				// Sync the setting so toggleSidebar() works correctly,
+				// but don't persist — the desktop preference stays in localStorage.
+				tmpSettings.SidebarCollapsed = true;
+				tmpWrap.classList.add('collapsed');
+				if (tmpToggle) tmpToggle.innerHTML = '&#x25BC;';
 			}
 		}
 
@@ -767,16 +894,19 @@ class ContentEditorLayoutView extends libPictView
 		let tmpSettings = this.pict.AppData.ContentEditor;
 		tmpSettings.SidebarCollapsed = !tmpSettings.SidebarCollapsed;
 
+		// Use vertical arrows on narrow viewports, horizontal on wide
+		let tmpIsMobile = (window.innerWidth <= 768);
+
 		if (tmpSettings.SidebarCollapsed)
 		{
 			tmpWrap.classList.add('collapsed');
-			if (tmpToggle) tmpToggle.innerHTML = '&#x25B6;';
+			if (tmpToggle) tmpToggle.innerHTML = tmpIsMobile ? '&#x25BC;' : '&#x25B6;';
 		}
 		else
 		{
 			tmpWrap.classList.remove('collapsed');
-			tmpWrap.style.width = tmpSettings.SidebarWidth + 'px';
-			if (tmpToggle) tmpToggle.innerHTML = '&#x25C0;';
+			tmpWrap.style.width = tmpIsMobile ? '100%' : (tmpSettings.SidebarWidth + 'px');
+			if (tmpToggle) tmpToggle.innerHTML = tmpIsMobile ? '&#x25B2;' : '&#x25C0;';
 		}
 
 		this.pict.PictApplication.saveSettings();

@@ -2,6 +2,7 @@
 
 The Retold Content System is a local markdown editor and documentation viewer. Install it once with npm and point it at any folder of markdown files.
 
+
 ## Installation
 
 Install globally from npm:
@@ -11,6 +12,8 @@ npm install -g retold-content-system
 ```
 
 This gives you two equivalent CLI commands: `retold-content-system` and `rcs`.
+
+![Editor Overview](1772209863522-Editor-Overview.png)
 
 ## Quick Start
 
@@ -33,6 +36,7 @@ The server starts on a random port between 7000 and 7999 and prints the URLs for
 
 Open the **Reader** URL for a pict-docuserve documentation viewer, or the **Editor** URL for the full editing environment.
 
+
 ## Choosing a Port
 
 Pass `-p` to pin the server to a specific port:
@@ -40,6 +44,7 @@ Pass `-p` to pin the server to a specific port:
 ```bash
 rcs serve -p 8080
 ```
+
 
 ## Pointing at a Different Folder
 
@@ -50,6 +55,7 @@ rcs serve ~/projects/my-wiki
 ```
 
 If the target directory has a `content/` subfolder, the server uses that automatically. This means running `rcs serve` from a project root that has a `content/` directory does the right thing without extra arguments.
+
 
 ## What Gets Served
 
@@ -65,6 +71,7 @@ The content system sets up three static routes and several API endpoints:
 | `/api/content/read/*` | File content read API |
 | `/api/content/save/*` | File content save API |
 | `/api/content/upload-image` | Image upload endpoint |
+
 
 ## Next Steps
 

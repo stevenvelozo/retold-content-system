@@ -4,6 +4,8 @@ The content editor is a browser-based application for editing markdown files and
 
 ## Layout
 
+![Editor-Overview](/content/1772209863522-Editor-Overview.png)
+
 The editor has three main areas:
 
 - **Top Bar** -- Shows the application name, current file name, save status, word/character stats, and action buttons (Save, Close).

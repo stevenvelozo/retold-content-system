@@ -692,10 +692,14 @@ class ContentEditorApplication extends libPictApplication
 					tmpEditorView.render();
 					tmpEditorView.marshalToView();
 
-					// Apply the Auto Content Preview setting via the
-					// library's own toggle so the per-segment button
-					// continues to work.
-					tmpEditorView.togglePreview(tmpSelf.pict.AppData.ContentEditor.AutoContentPreview);
+					// When Auto Content Preview is ON, force all previews
+					// visible on file load.  When OFF, leave the preview
+					// state alone so the user can manage per-segment toggles
+					// (the editor defaults to previews visible).
+					if (tmpSelf.pict.AppData.ContentEditor.AutoContentPreview)
+					{
+						tmpEditorView.togglePreview(true);
+					}
 
 					// Apply the Editing Controls setting (line numbers
 					// and right sidebar) via the library's toggleControls.

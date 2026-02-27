@@ -190,6 +190,40 @@ const _ViewConfiguration =
 			color: #5E5549;
 			white-space: nowrap;
 		}
+
+		/* ============================================
+		   RESPONSIVE: Tablet / Phone (max-width: 768px)
+		   ============================================ */
+		@media (max-width: 768px)
+		{
+			/* Settings flyout: position from left edge for more room */
+			.content-editor-settings-flyout
+			{
+				right: -8px;
+				width: 260px;
+			}
+		}
+
+		/* ============================================
+		   RESPONSIVE: Small phone (max-width: 480px)
+		   ============================================ */
+		@media (max-width: 480px)
+		{
+			/* Full-width settings flyout on small phones */
+			.content-editor-settings-flyout
+			{
+				position: fixed;
+				top: 48px;
+				right: 0;
+				left: 0;
+				width: 100%;
+				border-radius: 0 0 8px 8px;
+			}
+			.content-editor-settings-flyout::before
+			{
+				display: none;
+			}
+		}
 	`,
 
 	Templates:
