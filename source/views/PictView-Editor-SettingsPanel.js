@@ -540,15 +540,26 @@ class ContentEditorSettingsPanelView extends libPictView
 		this.pict.AppData.ContentEditor.AutoContentPreview = pChecked;
 		this.pict.PictApplication.saveSettings();
 
-		// When turned ON, show all previews immediately.
-		// When turned OFF, just save the preference — don't hide
-		// existing previews so per-segment toggles keep working.
-		if (pChecked)
+		let tmpEditorView = this.pict.views['ContentEditor-MarkdownEditor'];
+		if (tmpEditorView && this.pict.AppData.ContentEditor.ActiveEditor === 'markdown')
 		{
-			let tmpEditorView = this.pict.views['ContentEditor-MarkdownEditor'];
-			if (tmpEditorView && this.pict.AppData.ContentEditor.ActiveEditor === 'markdown')
+			if (pChecked)
 			{
+				// Turning ON: clear global hidden class and show all previews
 				tmpEditorView.togglePreview(true);
+				for (let tmpIdx in tmpEditorView._segmentEditors)
+				{
+					tmpEditorView.toggleSegmentPreview(parseInt(tmpIdx, 10), true);
+				}
+			}
+			else
+			{
+				// Turning OFF: hide each segment individually so
+				// per-segment toggle buttons still work
+				for (let tmpIdx in tmpEditorView._segmentEditors)
+				{
+					tmpEditorView.toggleSegmentPreview(parseInt(tmpIdx, 10), false);
+				}
 			}
 		}
 	}

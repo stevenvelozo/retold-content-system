@@ -81,7 +81,7 @@ class ContentEditorApplication extends libPictApplication
 			// Settings
 			AutoSegmentMarkdown: false,
 			AutoSegmentDepth: 1,
-			AutoContentPreview: false,
+			AutoContentPreview: true,
 			MarkdownEditingControls: true,
 			MarkdownWordWrap: true,
 			CodeWordWrap: false,
@@ -689,16 +689,31 @@ class ContentEditorApplication extends libPictApplication
 				let tmpEditorView = tmpSelf.pict.views['ContentEditor-MarkdownEditor'];
 				if (tmpEditorView)
 				{
+					// Set the image base URL so relative image references
+					// resolve through the /content/ static route.
+					let tmpImageBase = '/content/';
+					let tmpLastSlash = pFilePath.lastIndexOf('/');
+					if (tmpLastSlash > 0)
+					{
+						tmpImageBase = '/content/' + pFilePath.substring(0, tmpLastSlash) + '/';
+					}
+					tmpEditorView.options.ImageBaseURL = tmpImageBase;
+
 					tmpEditorView.render();
 					tmpEditorView.marshalToView();
 
-					// When Auto Content Preview is ON, force all previews
-					// visible on file load.  When OFF, leave the preview
-					// state alone so the user can manage per-segment toggles
-					// (the editor defaults to previews visible).
-					if (tmpSelf.pict.AppData.ContentEditor.AutoContentPreview)
+					// Always ensure the global preview class is clear so
+					// per-segment toggles work.
+					tmpEditorView.togglePreview(true);
+
+					// Set per-segment preview visibility based on the
+					// Auto Content Preview setting.  We must always loop
+					// to clear any stale _hiddenPreviewSegments state
+					// from previous file loads.
+					let tmpShowPreviews = !!tmpSelf.pict.AppData.ContentEditor.AutoContentPreview;
+					for (let tmpIdx in tmpEditorView._segmentEditors)
 					{
-						tmpEditorView.togglePreview(true);
+						tmpEditorView.toggleSegmentPreview(parseInt(tmpIdx, 10), tmpShowPreviews);
 					}
 
 					// Apply the Editing Controls setting (line numbers

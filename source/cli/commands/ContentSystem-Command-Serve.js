@@ -38,7 +38,6 @@ class ContentSystemCommandServe extends libCommandLineCommand
 		}
 
 		let tmpDistPath = libPath.resolve(__dirname, '..', '..', '..', 'web-application');
-		let tmpUploadPath = libPath.join(tmpContentPath, 'uploads');
 		let tmpPortOption = parseInt(this.CommandOptions.port, 10);
 		let tmpPort = (tmpPortOption > 0) ? tmpPortOption : (7000 + Math.floor(Math.random() * 1000));
 
@@ -56,19 +55,12 @@ class ContentSystemCommandServe extends libCommandLineCommand
 			this.log.info(`Created content directory: ${tmpContentPath}`);
 		}
 
-		// Ensure uploads directory exists
-		if (!libFs.existsSync(tmpUploadPath))
-		{
-			libFs.mkdirSync(tmpUploadPath, { recursive: true });
-		}
-
 		let tmpSelf = this;
 		let tmpSetupServer = require('../ContentSystem-Server-Setup.js');
 
 		tmpSetupServer(
 			{
 				ContentPath: tmpContentPath,
-				UploadPath: tmpUploadPath,
 				DistPath: tmpDistPath,
 				Port: tmpPort
 			},
@@ -85,7 +77,6 @@ class ContentSystemCommandServe extends libCommandLineCommand
 				tmpSelf.log.info(`  Retold Content System running on http://localhost:${pServerInfo.Port}`);
 				tmpSelf.log.info('==========================================================');
 				tmpSelf.log.info(`  Content: ${tmpContentPath}`);
-				tmpSelf.log.info(`  Uploads: ${tmpUploadPath}`);
 				tmpSelf.log.info(`  Assets:  ${tmpDistPath}`);
 				tmpSelf.log.info(`  Reader:  http://localhost:${pServerInfo.Port}/`);
 				tmpSelf.log.info(`  Editor:  http://localhost:${pServerInfo.Port}/edit.html`);

@@ -160,31 +160,6 @@ class ContentEditorProvider extends libPictProvider
 			});
 	}
 
-	/**
-	 * List uploaded images.
-	 *
-	 * @param {Function} fCallback - Callback receiving (error, filesArray)
-	 */
-	listUploads(fCallback)
-	{
-		let tmpCallback = (typeof (fCallback) === 'function') ? fCallback : () => {};
-
-		fetch('/api/content/uploads')
-			.then((pResponse) => pResponse.json())
-			.then((pData) =>
-			{
-				if (pData && pData.Success)
-				{
-					return tmpCallback(null, pData.Files || []);
-				}
-				return tmpCallback(pData ? pData.Error : 'Unknown error', []);
-			})
-			.catch((pError) =>
-			{
-				this.log.warn(`ContentEditor: Error listing uploads: ${pError}`);
-				return tmpCallback(pError.message, []);
-			});
-	}
 }
 
 module.exports = ContentEditorProvider;

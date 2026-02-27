@@ -6,7 +6,6 @@
  *
  * @param {object} pOptions
  * @param {string} pOptions.ContentPath  - Absolute path to the markdown content folder
- * @param {string} pOptions.UploadPath   - Absolute path to the uploads folder
  * @param {string} pOptions.DistPath     - Absolute path to the built web-application folder
  * @param {number} pOptions.Port         - HTTP port to listen on
  * @param {Function} fCallback           - Callback(pError, { Fable, Orator, Port })
@@ -84,7 +83,6 @@ function sanitizeFilename(pName)
 function setupContentSystemServer(pOptions, fCallback)
 {
 	let tmpContentPath = pOptions.ContentPath;
-	let tmpUploadPath = pOptions.UploadPath;
 	let tmpDistFolder = pOptions.DistPath;
 	let tmpPort = pOptions.Port;
 
@@ -93,17 +91,10 @@ function setupContentSystemServer(pOptions, fCallback)
 		Product: 'Retold-Content-System',
 		ProductVersion: require('../../package.json').version,
 		APIServerPort: tmpPort,
-		ContentPath: tmpContentPath,
-		UploadPath: tmpUploadPath
+		ContentPath: tmpContentPath
 	};
 
 	let tmpFable = new libFable(tmpSettings);
-
-	// Ensure the uploads directory exists
-	if (!libFs.existsSync(tmpUploadPath))
-	{
-		libFs.mkdirSync(tmpUploadPath, { recursive: true });
-	}
 
 	// Ensure the content directory exists
 	if (!libFs.existsSync(tmpContentPath))
@@ -350,39 +341,7 @@ function setupContentSystemServer(pOptions, fCallback)
 					return fNext();
 				});
 
-			// --- GET /api/content/uploads ---
-			// List uploaded images
-			tmpServiceServer.get('/api/content/uploads',
-				(pRequest, pResponse, fNext) =>
-				{
-					try
-					{
-						let tmpFiles = libFs.readdirSync(tmpUploadPath);
-						let tmpFileList = tmpFiles.map(
-							(pFilename) =>
-							{
-								let tmpStat = libFs.statSync(libPath.join(tmpUploadPath, pFilename));
-								return (
-								{
-									Filename: pFilename,
-									URL: `/uploads/${pFilename}`,
-									Size: tmpStat.size,
-									Modified: tmpStat.mtime
-								});
-							});
-						pResponse.send({ Success: true, Files: tmpFileList });
-					}
-					catch (pError)
-					{
-						pResponse.send(500, { Success: false, Error: pError.message });
-					}
-					return fNext();
-				});
-
-			// Serve uploaded images at /uploads/
-			tmpOrator.addStaticRoute(`${tmpUploadPath}/`, 'index.html', '/uploads/*', '/uploads/');
-
-			// Serve content markdown files at /content/ (for the reader)
+			// Serve content files (markdown, images, etc.) at /content/
 			tmpOrator.addStaticRoute(`${tmpContentPath}/`, 'index.html', '/content/*', '/content/');
 
 			// Serve the built application from dist/ (main static route)
