@@ -154,3 +154,8 @@ web-application
 
 # Nuxt.js build / generate output
 dist
+
+# Added by quackage update-node-gitignore
+
+# Quackage takes care of these for me!
+*.quackage.bak
