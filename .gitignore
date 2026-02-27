@@ -145,3 +145,12 @@ web-application
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Added by quackage update-node-gitignore
+
+# Quackage takes care of these for me!
+.gulpfile-quackage.js
+.gulpfile-quackage-config.json
+
+# Nuxt.js build / generate output
+dist
