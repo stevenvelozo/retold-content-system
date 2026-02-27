@@ -18348,28 +18348,39 @@ var CodeMirrorModules = (() => {
       decorations2.push(mark.range(match.end.from, match.end.to));
     return decorations2;
   }
-  var bracketMatchingState = /* @__PURE__ */ StateField.define({
-    create() {
-      return Decoration.none;
-    },
-    update(deco, tr) {
-      if (!tr.docChanged && !tr.selection)
-        return deco;
-      let decorations2 = [];
-      let config2 = tr.state.facet(bracketMatchingConfig);
-      for (let range of tr.state.selection.ranges) {
-        if (!range.empty)
-          continue;
-        let match = matchBrackets(tr.state, range.head, -1, config2) || range.head > 0 && matchBrackets(tr.state, range.head - 1, 1, config2) || config2.afterCursor && (matchBrackets(tr.state, range.head, 1, config2) || range.head < tr.state.doc.length && matchBrackets(tr.state, range.head + 1, -1, config2));
-        if (match)
-          decorations2 = decorations2.concat(config2.renderMatch(match, tr.state));
+  function bracketDeco(state) {
+    let decorations2 = [];
+    let config2 = state.facet(bracketMatchingConfig);
+    for (let range of state.selection.ranges) {
+      if (!range.empty)
+        continue;
+      let match = matchBrackets(state, range.head, -1, config2) || range.head > 0 && matchBrackets(state, range.head - 1, 1, config2) || config2.afterCursor && (matchBrackets(state, range.head, 1, config2) || range.head < state.doc.length && matchBrackets(state, range.head + 1, -1, config2));
+      if (match)
+        decorations2 = decorations2.concat(config2.renderMatch(match, state));
+    }
+    return Decoration.set(decorations2, true);
+  }
+  var bracketMatcher = /* @__PURE__ */ ViewPlugin.fromClass(class {
+    constructor(view) {
+      this.paused = false;
+      this.decorations = bracketDeco(view.state);
+    }
+    update(update) {
+      if (update.docChanged || update.selectionSet || this.paused) {
+        if (update.view.composing) {
+          this.decorations = this.decorations.map(update.changes);
+          this.paused = true;
+        } else {
+          this.decorations = bracketDeco(update.state);
+          this.paused = false;
+        }
       }
-      return Decoration.set(decorations2, true);
-    },
-    provide: (f) => EditorView.decorations.from(f)
+    }
+  }, {
+    decorations: (v) => v.decorations
   });
   var bracketMatchingUnique = [
-    bracketMatchingState,
+    bracketMatcher,
     baseTheme2
   ];
   function bracketMatching(config2 = {}) {
