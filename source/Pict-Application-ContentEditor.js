@@ -46,9 +46,45 @@ class ContentEditorApplication extends libPictApplication
 		tmpFileBrowserConfig.DefaultState.Layout = 'list-only';
 		this.pict.addView('Pict-FileBrowser', tmpFileBrowserConfig, libPictSectionFileBrowser);
 
-		// Register the list detail sub-view for the file list pane
-		this.pict.addView('Pict-FileBrowser-ListDetail',
-			libPictSectionFileBrowser.PictViewListDetail.default_configuration,
+		// Register the list detail sub-view for the file list pane.
+		// Override templates to:
+		//   - Add a "create folder" button to the breadcrumb bar
+		//   - Add a hover-visible "+" insert button on each file row
+		let tmpListDetailConfig = JSON.parse(JSON.stringify(
+			libPictSectionFileBrowser.PictViewListDetail.default_configuration));
+		for (let i = 0; i < tmpListDetailConfig.Templates.length; i++)
+		{
+			if (tmpListDetailConfig.Templates[i].Hash === 'FileBrowser-ListDetail-Container-Template')
+			{
+				tmpListDetailConfig.Templates[i].Template = /*html*/`
+<div class="pict-fb-detail" id="Pict-FileBrowser-DetailList">
+	<div class="pict-fb-breadcrumb-bar">
+		<div class="pict-fb-breadcrumb" id="Pict-FileBrowser-Breadcrumb"></div>
+		<button class="pict-fb-breadcrumb-addfolder" onclick="pict.PictApplication.promptNewFolder()" title="New folder">+</button>
+	</div>
+	<div class="pict-fb-detail-header">
+		<div class="pict-fb-detail-header-cell pict-fb-detail-col-name" onclick="pict.views['{~D:Record.ViewHash~}'].sortBy('Name')">Name</div>
+		<div class="pict-fb-detail-header-cell pict-fb-detail-col-size" onclick="pict.views['{~D:Record.ViewHash~}'].sortBy('Size')">Size</div>
+		<div class="pict-fb-detail-header-cell pict-fb-detail-col-modified" onclick="pict.views['{~D:Record.ViewHash~}'].sortBy('Modified')">Modified</div>
+	</div>
+	<div id="Pict-FileBrowser-DetailRows"></div>
+</div>
+`;
+			}
+			if (tmpListDetailConfig.Templates[i].Hash === 'FileBrowser-ListDetail-Row-Template')
+			{
+				tmpListDetailConfig.Templates[i].Template = /*html*/`
+<div class="pict-fb-detail-row{~D:Record.SelectedClass~}" data-index="{~D:Record.Index~}" data-name="{~D:Record.Name~}" onclick="{~D:Record.ClickHandler~}" ondblclick="{~D:Record.DblClickHandler~}">
+	<span class="pict-fb-detail-icon">{~D:Record.Icon~}</span>
+	<span class="pict-fb-detail-name">{~D:Record.Name~}</span>
+	<span class="pict-fb-detail-size">{~D:Record.SizeFormatted~}</span>
+	<span class="pict-fb-detail-modified">{~D:Record.ModifiedFormatted~}</span>
+	<button class="pict-fb-insert-btn" onclick="event.stopPropagation(); pict.PictApplication.insertFileReference(this.parentElement.getAttribute('data-name'))" title="Insert into editor">+</button>
+</div>
+`;
+			}
+		}
+		this.pict.addView('Pict-FileBrowser-ListDetail', tmpListDetailConfig,
 			libPictSectionFileBrowser.PictViewListDetail);
 	}
 
@@ -1023,6 +1059,126 @@ class ContentEditorApplication extends libPictApplication
 		if (tmpFileName && tmpFileName.trim())
 		{
 			this.createNewFile(tmpFileName.trim());
+		}
+	}
+
+	/**
+	 * Prompt the user for a folder name and create it in the current
+	 * browse location via the server API.
+	 */
+	promptNewFolder()
+	{
+		let tmpFolderName = prompt('Enter a name for the new folder:');
+		if (!tmpFolderName || !tmpFolderName.trim())
+		{
+			return;
+		}
+		tmpFolderName = tmpFolderName.trim();
+
+		// Build the full relative path inside the current browse location
+		let tmpCurrentLocation = '';
+		if (this.pict.AppData.PictFileBrowser && this.pict.AppData.PictFileBrowser.CurrentLocation)
+		{
+			tmpCurrentLocation = this.pict.AppData.PictFileBrowser.CurrentLocation;
+		}
+		let tmpPath = tmpCurrentLocation
+			? (tmpCurrentLocation + '/' + tmpFolderName)
+			: tmpFolderName;
+
+		let tmpSelf = this;
+
+		fetch('/api/content/mkdir',
+		{
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ Path: tmpPath })
+		})
+			.then((pResponse) => pResponse.json())
+			.then((pData) =>
+			{
+				if (pData && pData.Success)
+				{
+					tmpSelf.log.info(`Folder created: ${tmpPath}`);
+					// Refresh the file list to show the new folder
+					tmpSelf.loadFileList();
+				}
+				else
+				{
+					alert('Could not create folder: ' + (pData ? pData.Error : 'Unknown error'));
+				}
+			})
+			.catch((pError) =>
+			{
+				alert('Error creating folder: ' + pError.message);
+			});
+	}
+
+	/**
+	 * Insert a file reference into the active markdown editor segment.
+	 *
+	 * Called from the "+" button on file browser rows.  For image files
+	 * this inserts markdown image syntax; for other files a markdown link.
+	 *
+	 * @param {string} pFilename - The filename to insert
+	 */
+	insertFileReference(pFilename)
+	{
+		if (!pFilename)
+		{
+			return;
+		}
+
+		let tmpEditorView = this.pict.views['ContentEditor-MarkdownEditor'];
+		if (!tmpEditorView || this.pict.AppData.ContentEditor.ActiveEditor !== 'markdown')
+		{
+			return;
+		}
+
+		// Determine the active segment (the one with focus, or the last one)
+		let tmpSegmentIndex = tmpEditorView._activeSegmentIndex;
+		if (tmpSegmentIndex < 0)
+		{
+			// Fall back to the first segment
+			let tmpIndices = tmpEditorView._getOrderedSegmentIndices();
+			if (tmpIndices.length > 0)
+			{
+				tmpSegmentIndex = tmpIndices[0];
+			}
+		}
+		if (tmpSegmentIndex < 0)
+		{
+			return;
+		}
+
+		// Build alt text from the filename (strip extension and timestamp prefix)
+		let tmpAltText = pFilename.replace(/\.[^.]+$/, '');
+		tmpAltText = tmpAltText.replace(/^\d{10,}-/, '');
+		tmpAltText = tmpAltText.replace(/[-_]+/g, ' ').trim() || 'image';
+
+		// Check if this is an image file
+		let tmpExt = pFilename.substring(pFilename.lastIndexOf('.')).toLowerCase();
+		let tmpImageExts = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp', '.avif', '.apng', '.ico', '.tiff', '.tif', '.jfif'];
+
+		if (tmpImageExts.indexOf(tmpExt) >= 0)
+		{
+			// Insert markdown image syntax — relative filename resolved by ImageBaseURL
+			tmpEditorView._insertImageMarkdown(tmpSegmentIndex, pFilename, tmpAltText);
+		}
+		else
+		{
+			// Insert a markdown link for non-image files
+			let tmpEditor = tmpEditorView._segmentEditors[tmpSegmentIndex];
+			if (tmpEditor)
+			{
+				let tmpInsert = '[' + tmpAltText + '](' + pFilename + ')';
+				let tmpCursorPos = tmpEditor.state.selection.main.head;
+				tmpEditor.dispatch(
+				{
+					changes: { from: tmpCursorPos, insert: tmpInsert },
+					selection: { anchor: tmpCursorPos + tmpInsert.length }
+				});
+				tmpEditor.focus();
+			}
 		}
 	}
 

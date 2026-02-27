@@ -77,9 +77,6 @@ class ContentSystemCommandServe extends libCommandLineCommand
 				tmpSelf.log.info(`  Retold Content System running on http://localhost:${pServerInfo.Port}`);
 				tmpSelf.log.info('==========================================================');
 				tmpSelf.log.info(`  Content: ${tmpContentPath}`);
-				tmpSelf.log.info(`  Assets:  ${tmpDistPath}`);
-				tmpSelf.log.info(`  Reader:  http://localhost:${pServerInfo.Port}/`);
-				tmpSelf.log.info(`  Editor:  http://localhost:${pServerInfo.Port}/edit.html`);
 				tmpSelf.log.info('==========================================================');
 				tmpSelf.log.info('');
 				tmpSelf.log.info('  Press Ctrl+C to stop.');

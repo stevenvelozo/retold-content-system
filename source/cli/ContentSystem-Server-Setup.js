@@ -147,6 +147,57 @@ function setupContentSystemServer(pOptions, fCallback)
 					return fNext();
 				});
 
+			// --- POST /api/content/mkdir ---
+			// Create a new folder inside the content directory.
+			// Body: { Path: "relative/path/to/new-folder" }
+			tmpServiceServer.post('/api/content/mkdir',
+				(pRequest, pResponse, fNext) =>
+				{
+					try
+					{
+						let tmpRawPath = (pRequest.body && pRequest.body.Path) ? pRequest.body.Path : null;
+						let tmpSafePath = sanitizePath(tmpRawPath);
+
+						if (!tmpSafePath)
+						{
+							pResponse.send(400, { Success: false, Error: 'Invalid folder path.' });
+							return fNext();
+						}
+
+						let tmpFullPath = libPath.join(tmpContentPath, tmpSafePath);
+
+						// Ensure the resolved path is within the content directory
+						let tmpRealContent = libFs.realpathSync(tmpContentPath);
+						let tmpTargetParent = libPath.dirname(tmpFullPath);
+						if (libFs.existsSync(tmpTargetParent))
+						{
+							tmpTargetParent = libFs.realpathSync(tmpTargetParent);
+						}
+						if (!tmpTargetParent.startsWith(tmpRealContent))
+						{
+							pResponse.send(403, { Success: false, Error: 'Access denied.' });
+							return fNext();
+						}
+
+						if (libFs.existsSync(tmpFullPath))
+						{
+							pResponse.send(409, { Success: false, Error: 'Folder already exists.' });
+							return fNext();
+						}
+
+						libFs.mkdirSync(tmpFullPath, { recursive: true });
+
+						tmpFable.log.info(`Folder created: ${tmpSafePath}`);
+						pResponse.send({ Success: true, Path: tmpSafePath });
+					}
+					catch (pError)
+					{
+						tmpFable.log.error(`Folder creation failed: ${pError.message}`);
+						pResponse.send(500, { Success: false, Error: pError.message });
+					}
+					return fNext();
+				});
+
 			// --- GET /api/content/read/* ---
 			// Read the raw markdown content of a file
 			tmpServiceServer.get('/api/content/read/*',

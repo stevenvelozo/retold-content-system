@@ -197,6 +197,38 @@ const _ViewConfiguration =
 		{
 			display: none;
 		}
+		/* Breadcrumb bar: flex wrapper with create-folder button */
+		.pict-fb-breadcrumb-bar
+		{
+			display: flex;
+			align-items: center;
+			background: #F5F0E8;
+			border-bottom: 1px solid #DDD6CA;
+		}
+		.pict-fb-breadcrumb-bar .pict-fb-breadcrumb
+		{
+			flex: 1;
+			border-bottom: none;
+		}
+		.pict-fb-breadcrumb-addfolder
+		{
+			flex-shrink: 0;
+			background: transparent;
+			border: none;
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: #8A7F72;
+			cursor: pointer;
+			padding: 4px 10px;
+			line-height: 1;
+			border-radius: 4px;
+			margin-right: 4px;
+		}
+		.pict-fb-breadcrumb-addfolder:hover
+		{
+			color: #2E7D74;
+			background: #EAE3D8;
+		}
 		#ContentEditor-Editor-Container
 		{
 			flex: 1;
@@ -534,6 +566,54 @@ const _ViewConfiguration =
 			text-align: center;
 		}
 
+		/* File browser row insert button — hidden by default, shown on
+		   hover for image file rows via CSS attribute selectors. */
+		.pict-fb-insert-btn
+		{
+			display: none;
+			position: absolute;
+			right: 6px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: #2E7D74;
+			color: #FFF;
+			border: none;
+			border-radius: 4px;
+			font-size: 0.78rem;
+			font-weight: 700;
+			line-height: 1;
+			padding: 2px 7px;
+			cursor: pointer;
+		}
+		.pict-fb-insert-btn:hover
+		{
+			background: #3A9E92;
+		}
+		/* Make the row position:relative so the button can be absolutely placed */
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row
+		{
+			position: relative;
+		}
+		/* Show the insert button on hover for image file extensions.
+		   CSS attribute selector [data-name$=".ext" i] matches
+		   the end of the data-name attribute, case-insensitive. */
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".png" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".jpg" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".jpeg" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".gif" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".webp" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".svg" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".bmp" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".avif" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".apng" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".ico" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".tiff" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".tif" i]:hover .pict-fb-insert-btn,
+		#ContentEditor-Sidebar-Container .pict-fb-detail-row[data-name$=".jfif" i]:hover .pict-fb-insert-btn
+		{
+			display: inline-block;
+		}
+
 		/* ============================================
 		   RESPONSIVE: Tablet / Phone (max-width: 768px)
 		   ============================================ */
@@ -630,6 +710,7 @@ const _ViewConfiguration =
 				width: 95vw;
 				max-width: 95vw;
 			}
+
 		}
 
 		/* ============================================
