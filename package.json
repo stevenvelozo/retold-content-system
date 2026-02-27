@@ -55,7 +55,7 @@
 		"codemirror": "^6.0.2",
 		"esbuild": "^0.27.3",
 		"highlight.js": "^11.11.1",
-		"quackage": "^1.0.58"
+		"quackage": "^1.0.59"
 	},
 	"copyFilesSettings": {
 		"whenFileExists": "overwrite"
