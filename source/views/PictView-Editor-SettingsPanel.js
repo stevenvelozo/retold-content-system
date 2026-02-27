@@ -505,6 +505,13 @@ class ContentEditorSettingsPanelView extends libPictView
 	{
 		this.pict.AppData.ContentEditor.AutoContentPreview = pChecked;
 		this.pict.PictApplication.saveSettings();
+
+		// Live-apply to the markdown editor if it's currently active
+		let tmpEditorView = this.pict.views['ContentEditor-MarkdownEditor'];
+		if (tmpEditorView && this.pict.AppData.ContentEditor.ActiveEditor === 'markdown')
+		{
+			tmpEditorView.togglePreview(pChecked);
+		}
 	}
 
 	onAutoSegmentChanged(pChecked)

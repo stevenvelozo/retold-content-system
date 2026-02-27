@@ -1,6 +1,6 @@
 {
 	"name": "retold-content-system",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "Retold Content System - Markdown content viewer and editor",
 	"main": "source/Pict-ContentSystem-Bundle.js",
 	"bin": {
@@ -43,7 +43,7 @@
 		"pict-section-code": "^1.0.3",
 		"pict-section-content": "^0.0.8",
 		"pict-section-filebrowser": "^0.0.2",
-		"pict-section-markdowneditor": "^1.0.1",
+		"pict-section-markdowneditor": "^1.0.3",
 		"pict-service-commandlineutility": "^1.0.19",
 		"pict-view": "^1.0.67"
 	},
