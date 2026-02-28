@@ -2,7 +2,7 @@
  * Retold Content System -- Shared Orator Server Setup
  *
  * This module encapsulates all server initialization logic so it can be
- * used by both the standalone server.js entry point and the CLI serve command.
+ * used by both the standalone Simple-Server.js entry point and the CLI serve command.
  *
  * @param {object} pOptions
  * @param {string} pOptions.ContentPath  - Absolute path to the markdown content folder

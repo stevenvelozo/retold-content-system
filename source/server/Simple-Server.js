@@ -14,14 +14,15 @@
  */
 
 const libPath = require('path');
-const libSetupServer = require('./source/cli/ContentSystem-Server-Setup.js');
+const libSetupServer = require('../cli/ContentSystem-Server-Setup.js');
 
+const tmpProjectRoot = libPath.join(__dirname, '..', '..');
 let tmpPort = parseInt(process.env.PORT, 10) || 8086;
 
 libSetupServer(
 	{
-		ContentPath: libPath.join(__dirname, 'content'),
-		DistPath: libPath.join(__dirname, 'web-application'),
+		ContentPath: libPath.join(tmpProjectRoot, 'content'),
+		DistPath: libPath.join(tmpProjectRoot, 'web-application'),
 		Port: tmpPort
 	},
 	function (pError, pServerInfo)
@@ -34,7 +35,7 @@ libSetupServer(
 		pServerInfo.Fable.log.info('==========================================================');
 		pServerInfo.Fable.log.info(`  Retold Content System running on http://localhost:${pServerInfo.Port}`);
 		pServerInfo.Fable.log.info('==========================================================');
-		pServerInfo.Fable.log.info(`  Content path: ${libPath.join(__dirname, 'content')}`);
+		pServerInfo.Fable.log.info(`  Content path: ${libPath.join(tmpProjectRoot, 'content')}`);
 		pServerInfo.Fable.log.info(`  Reader:       http://localhost:${pServerInfo.Port}/`);
 		pServerInfo.Fable.log.info(`  Editor:       http://localhost:${pServerInfo.Port}/edit.html`);
 		pServerInfo.Fable.log.info('==========================================================');

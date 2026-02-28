@@ -9,23 +9,18 @@
 	},
 	"files": [
 		"source/",
+		"build/",
 		"web-application/",
 		"html/",
 		"css/",
-		"docs/",
-		"server.js",
-		"build-codemirror-bundle.js",
-		"build-codejar-bundle.js",
-		"codemirror-entry.js",
-		"codejar-entry.js",
 		"README.md",
 		"LICENSE"
 	],
 	"scripts": {
-		"start": "node server.js",
+		"start": "node source/server/Simple-Server.js",
 		"build": "npx quack build && npx quack copy",
-		"build-codemirror": "node build-codemirror-bundle.js",
-		"build-codejar": "node build-codejar-bundle.js",
+		"build-codemirror": "node build/build-codemirror-bundle.js",
+		"build-codejar": "node build/build-codejar-bundle.js",
 		"build-all": "npm run build-codemirror && npm run build-codejar && npm run build",
 		"prepack": "npm run build-all",
 		"test": "echo \"Error: no test specified\" && exit 0"

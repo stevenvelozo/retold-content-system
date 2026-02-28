@@ -17,7 +17,7 @@ var CodeMirrorModules = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // codemirror-entry.js
+  // build/codemirror-entry.js
   var codemirror_entry_exports = {};
   __export(codemirror_entry_exports, {
     Decoration: () => Decoration,
@@ -29987,7 +29987,7 @@ var CodeMirrorModules = (() => {
     }
   });
 
-  // codemirror-entry.js
+  // build/codemirror-entry.js
   var extensions = [basicSetup, markdown()];
   return __toCommonJS(codemirror_entry_exports);
 })();

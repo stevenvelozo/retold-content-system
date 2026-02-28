@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build script to bundle CodeMirror v6 into a single browser-compatible file.
- * Run: node build-codemirror-bundle.js
+ * Run: node build/build-codemirror-bundle.js
  *
  * This creates html/codemirror-bundle.js which exposes window.CodeMirrorModules
  * with { EditorView, EditorState, Decoration, ViewPlugin, WidgetType, extensions }.
@@ -9,11 +9,13 @@
 const { build } = require('esbuild');
 const path = require('path');
 
+const tmpProjectRoot = path.join(__dirname, '..');
+
 build(
 {
 	entryPoints: [path.join(__dirname, 'codemirror-entry.js')],
 	bundle: true,
-	outfile: path.join(__dirname, 'html', 'codemirror-bundle.js'),
+	outfile: path.join(tmpProjectRoot, 'html', 'codemirror-bundle.js'),
 	format: 'iife',
 	globalName: 'CodeMirrorModules',
 	platform: 'browser',

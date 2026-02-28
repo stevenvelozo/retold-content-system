@@ -643,6 +643,13 @@ const _ViewConfiguration =
 				border-right: none;
 			}
 
+			/* Give the Reference and Topics tabs much more room on mobile
+			   since they contain long scrollable content */
+			.content-editor-sidebar-wrap.sidebar-expanded-pane
+			{
+				max-height: 70vh;
+			}
+
 			/* When collapsed on mobile, hide the inner content but keep the
 			   toggle button visible (it's positioned below the sidebar strip) */
 			.content-editor-sidebar-wrap.collapsed
@@ -728,6 +735,10 @@ const _ViewConfiguration =
 			.content-editor-sidebar-wrap
 			{
 				max-height: 35vh;
+			}
+			.content-editor-sidebar-wrap.sidebar-expanded-pane
+			{
+				max-height: 65vh;
 			}
 		}
 	`,
@@ -1024,6 +1035,20 @@ class ContentEditorLayoutView extends libPictView
 		// Show the selected pane and activate the selected tab
 		if (tmpPanes[pTab]) tmpPanes[pTab].style.display = '';
 		if (tmpTabs[pTab]) tmpTabs[pTab].classList.add('active');
+
+		// On mobile, give the Reference and Topics tabs more vertical space
+		let tmpWrap = document.getElementById('ContentEditor-SidebarWrap');
+		if (tmpWrap)
+		{
+			if (pTab === 'reference' || pTab === 'topics')
+			{
+				tmpWrap.classList.add('sidebar-expanded-pane');
+			}
+			else
+			{
+				tmpWrap.classList.remove('sidebar-expanded-pane');
+			}
+		}
 
 		// Lazy-render the Reference view on first switch
 		if (pTab === 'reference')

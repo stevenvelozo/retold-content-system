@@ -428,6 +428,28 @@ const _ViewConfiguration =
 			background: #EDE9E3;
 			color: #3D3229;
 		}
+		.md-ref-docs-link
+		{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 8px 10px;
+			background: #F0FAF8;
+			border-bottom: 1px solid #DDD6CA;
+			font-size: 0.8rem;
+			font-weight: 600;
+			flex-shrink: 0;
+		}
+		.md-ref-docs-link a
+		{
+			color: #2E7D74;
+			text-decoration: none;
+		}
+		.md-ref-docs-link a:hover
+		{
+			text-decoration: underline;
+		}
 		/* Search highlight */
 		mark.md-ref-highlight
 		{
@@ -449,6 +471,10 @@ const _ViewConfiguration =
 			Hash: "ContentEditor-MarkdownReference-Template",
 			Template: /*html*/`
 <div class="md-ref-container">
+	<div class="md-ref-docs-link">
+		<span>&#x1F4D6;</span>
+		<a href="/docs/" target="_blank">Full Documentation</a>
+	</div>
 	<div class="md-ref-search-bar">
 		<input type="text" class="md-ref-search-input"
 			id="ContentEditor-MdRef-SearchInput"
